@@ -204,20 +204,7 @@ module AArch64
 
     def add d, n, m, extend: nil, amount: 0, lsl: 0, shift: :lsl
       if extend
-        extend = case extend
-                 when :uxtb then 0b000
-                 when :uxth then 0b001
-                 when :uxtw then 0b010
-                 when :lsl  then 0b010
-                 when :uxtx then 0b011
-                 when :sxtb then 0b100
-                 when :sxth then 0b101
-                 when :sxtw then 0b110
-                 when :sxtx then 0b111
-                 else
-                   raise "Unknown extend #{extend}"
-                 end
-
+        extend = Utils.sub_decode_extend32(extend)
         a ADD_addsub_ext.new(d, n, m, extend, amount, d.sf)
       else
         if m.integer?
