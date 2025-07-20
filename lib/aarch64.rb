@@ -7,6 +7,11 @@ require "aarch64/utils"
 module AArch64
   module Registers
     class Register < ClassGen.pos(:to_i, :sp, :zr)
+      def initialize(...)
+        super(...)
+        freeze
+      end
+
       alias sp? sp
       alias zr? zr
       def integer?; false; end
@@ -39,10 +44,16 @@ module AArch64
       def name; "W#{to_i}"; end
     end
 
+    xregs = []
+    wregs = []
+
     31.times { |i|
-      const_set(:"X#{i}", XRegister.new(i, false, false))
-      const_set(:"W#{i}", WRegister.new(i, false, false))
+      xregs[i] = const_set(:"X#{i}", XRegister.new(i, false, false))
+      wregs[i] = const_set(:"W#{i}", WRegister.new(i, false, false))
     }
+
+    XREGS = xregs.freeze
+    WREGS = xregs.freeze
 
     SP = XRegister.new(31, true, false)
     WSP = WRegister.new(31, true, false)
